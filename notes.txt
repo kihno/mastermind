@@ -3,3 +3,6 @@ intersection = ["white", "white", "black", "blue"] - ["yellow", "white", "blue",
 intersection = []
 
 compring arrays with duplicate values doesn't work, find another method.
+
+for each guess
+    array.include guess? color += 1
