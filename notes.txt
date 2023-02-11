@@ -1,0 +1,5 @@
+intersection = ["white", "white", "black", "blue"] - ["yellow", "white", "blue", "black"]
+
+intersection = []
+
+compring arrays with duplicate values doesn't work, find another method.

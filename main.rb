@@ -4,19 +4,41 @@ end
 
 class CodeMaker
   include AllColors
-  attr_accessor :generate_code, :code
+  attr_reader :generate_code, :code
+  attr_accessor :check_code
 
   def generate_code
     @code = [COLORS.sample, COLORS.sample, COLORS.sample, COLORS.sample]
   end
 
-  def check_code
+  def check_code(guess)
+    p @code
+    p guess
+    intersection = @code - guess
+    p intersection
+    color = 4 - intersection.length
+    location = 0
+    p color
+    p location
+
+    @code.each_with_index do |code_color, index|
+      if code_color == guess[index]
+        location += 1
+        color -= 1
+      end
+    end
+
+    p "Secret Code: #{@code}"
+    p "Your Guess: #{guess}"
+    p "Correct Color: #{color}"
+    p "Correct Location: #{location}"
   end
 end
 
 class CodeBreaker
   include AllColors
-  attr_accessor :code_guess, :turns
+  attr_reader :code_guess
+  attr_accessor :turns
 
   def initialize
     @code_guess = []
@@ -28,15 +50,17 @@ class CodeBreaker
 
     until valid
       if COLORS.include?(guess)
-        p "You guessed #{guess}"
         @code_guess.push(guess)
-        p @code_guess
         valid = true
       else
         p "Please choose a valid color: red, blue, yellow, green, black, or white."
         guess = gets.chomp
       end
     end
+  end
+
+  def clear_guess
+    @code_guess = []
   end
 
   def guess
@@ -56,8 +80,26 @@ class CodeBreaker
 end
 
 class Game
+  def game_start
+    @hal = CodeMaker.new
+    @dave = CodeBreaker.new 
+    @turns = 12
+    @gameover = false
+    @hal.generate_code
+    game_loop
+  end
+
+  def game_loop
+    while @dave.turns > 0
+      @dave.guess
+      @hal.check_code(@dave.code_guess)
+      @dave.clear_guess
+      @dave.turns -= 1
+      puts "You have #{@dave.turns} guesses left."
+    end
+  end
 end
 
-hal = CodeMaker.new
-dave = CodeBreaker.new
-dave.guess
+new_game = Game.new
+new_game.game_start
+
